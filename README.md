@@ -33,7 +33,8 @@ Ransomware attacks often begin by dropping malicious scripts or policies in the 
 
 # Run and set custom scan interval (in seconds)
 .\sysvol-monitor.ps1 -RenameExisting -MonitorNew -Interval 10
-💡 If no switches are passed, it performs both actions every 3 seconds.
+
+
 
 🛠️ Parameters
 Parameter	Type	Default	Description
@@ -87,3 +88,4 @@ Pull requests and feature suggestions are welcome. If you found this useful in s
 
 📜 License
 MIT License
+
