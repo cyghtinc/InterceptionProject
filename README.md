@@ -36,7 +36,7 @@ Ransomware attacks often begin by dropping malicious scripts or policies in the 
 
 
 
-🛡️ Security Use Case: Ransomware Defense
+## 🛡️ Security Use Case: Ransomware Defense
 This tool acts as an automated containment control:
 
 Stops ransomware from leveraging SYSVOL as a launch point.
@@ -47,14 +47,14 @@ Buys critical response time for the SOC/IR team to investigate.
 
 Can be run temporarily or 24/7 on critical servers or a jump host.
 
-📦 Deployment Options
+## 📦 Deployment Options
 Scheduled Task: Automatically launch the script at system boot.
 
 Windows Service: Convert using tools like nssm or winser.
 
 GPO Startup Script: Deploy to multiple machines for layered protection.
 
-📋 Requirements
+## 📋 Requirements
 PowerShell 5.1+
 
 Domain-joined machine
