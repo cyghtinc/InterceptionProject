@@ -35,7 +35,7 @@ Ransomware attacks often begin by dropping malicious scripts or policies in the 
 .\sysvol-monitor.ps1 -RenameExisting -MonitorNew -Interval 10
 💡 If no switches are passed, it performs both actions every 3 seconds.
 
-🛠️ Parameters
+**##** 🛠️ **Parameters**
 Parameter	Type	Default	Description
 -RenameExisting	Switch	False	Renames all existing files in SYSVOL at startup.
 -MonitorNew	Switch	True	Monitors for new files and renames them automatically.
