@@ -19,21 +19,6 @@ Ransomware attacks often begin by dropping malicious scripts or policies in the 
 
 ---
 
-🛠️ Parameters
-Parameter	Type	Default	Description
--RenameExisting	Switch	False	Renames all existing files in SYSVOL at startup.
--MonitorNew	Switch	True	Monitors for new files and renames them automatically.
--Interval	Integer	3	Number of seconds between each scan cycle.
-
-📄 Example Log Output
-pgsql
-Copy
-Edit
-2025-06-11 13:00:01 - Renamed existing file: 'startup.bat' → 'startupaa.bat'
-2025-06-11 13:00:04 - Renamed new file: 'malicious.vbs' → 'maliciousaa.vbs'
-2025-06-11 13:00:07 - Failed to rename new file 'policy.ps1': Access to the path is denied.
-Logs are saved in sysvol_monitor.log in the same directory as the script.
-
 🛡️ Security Use Case: Ransomware Defense
 This tool acts as an automated containment control:
 
