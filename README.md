@@ -18,17 +18,4 @@ Ransomware attacks often begin by dropping malicious scripts or policies in the 
 - Logs every action and error for traceability.
 
 ---
-## ⚙️ Usage
 
-```powershell
-# Run with all features (default behavior)
-.\sysvol-monitor.ps1
-
-# Run and only rename existing files in SYSVOL
-.\sysvol-monitor.ps1 -RenameExisting
-
-# Run and only monitor new files
-.\sysvol-monitor.ps1 -MonitorNew
-
-# Run and set custom scan interval (in seconds)
-.\sysvol-monitor.ps1 -RenameExisting -MonitorNew -Interval 10
