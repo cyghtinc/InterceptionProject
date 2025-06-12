@@ -7,32 +7,39 @@ Stopping Ransomware in real-time
 
 ## 🔥 Why This Tool?
 
-Ransomware attacks often begin by dropping malicious scripts or policies in the `\\<domain>\SYSVOL` share. These files can automatically execute via GPO or login scripts, affecting the entire network. This tool **monitors the SYSVOL share in real time**, and **renames any new files** before they can execute — effectively **disrupting the attack chain**.
+Ransomware actors often abuse the `\\<domain>\SYSVOL` share to drop and spread malicious scripts via GPO or login mechanisms. Once a file lands in SYSVOL, it may automatically execute on multiple endpoints.  
+**SYSVOL Watchdog** prevents that by **renaming new and existing files in real time**, disrupting the attack and halting its spread.
+
+---
 
 ## 🧠 How It Works
 
-- Automatically identifies the domain’s FQDN and accesses `\\<domain>\SYSVOL`.
-- **Renames any new files** every 3 seconds by appending `"aa"` to the filename (e.g., `logon.vbs` → `logonaa.vbs`).
-- Optionally, renames existing files at startup.
-- Runs continuously in the background to **halt ransomware propagation**.
-- Logs every action and error for traceability.
+- Automatically determines the current domain and targets the default SYSVOL share (`\\<domain>\SYSVOL`), unless a custom path is provided.
+- **Renames any new files** by adding `"aa"` to the base name (e.g., `start.ps1` → `startaa.ps1`).
+- Optionally renames **existing files** at startup.
+- **Can target specific subfolders** within SYSVOL using `-SysvolPath`.
+- **Recursive scanning** can be enabled or disabled with the `-Recursive` switch.
+- Logs every action and error to a local `.log` file.
 
 ---
 
 ## ⚙️ Usage
 
 ```powershell
-# Run with all features (default behavior)
+# Default behavior – renames both new and existing files recursively in default SYSVOL
 .\sysvol-monitor.ps1
 
-# Run and only rename existing files in SYSVOL
+# Rename only existing files at startup
 .\sysvol-monitor.ps1 -RenameExisting
 
-# Run and only monitor new files
-.\sysvol-monitor.ps1 -MonitorNew
+# Monitor only new files (every 5 seconds)
+.\sysvol-monitor.ps1 -MonitorNew -Interval 5
 
-# Run and set custom scan interval (in seconds)
-.\sysvol-monitor.ps1 -RenameExisting -MonitorNew -Interval 10
+# Target specific SYSVOL subfolder (non-recursive)
+.\sysvol-monitor.ps1 -SysvolPath "\\corp.local\SYSVOL\corp.local\Policies" -Recursive
+
+# Rename existing and monitor new files in a custom SYSVOL folder (recursively)
+.\sysvol-monitor.ps1 -SysvolPath "\\corp.local\SYSVOL\corp.local\Scripts" -RenameExisting -MonitorNew -Recursive
 
 
 🛠️ Parameters
