@@ -35,6 +35,15 @@ Ransomware attacks often begin by dropping malicious scripts or policies in the 
 .\sysvol-monitor.ps1 -RenameExisting -MonitorNew -Interval 10
 
 
+🛠️ Parameters
+Parameter	Type	Default	Description
+-RenameExisting	Switch	False	Renames all existing files in the target folder at startup.
+-MonitorNew	Switch	True (if no params passed)	Monitors for new files and renames them.
+-Interval	Integer	3	How often to scan for new files (in seconds).
+-SysvolPath	String	\\<domain>\SYSVOL	Custom path to scan, such as a subfolder inside SYSVOL.
+-Recursive	Switch	True (default if no path)	Whether to scan subfolders inside the target path.
+
+
 
 ## 🛡️ Security Use Case: Ransomware Defense
 This tool acts as an automated containment control:
