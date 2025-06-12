@@ -6,32 +6,34 @@ param(
     [switch]$Recursive
 )
 
-# Set defaults if no switches are provided
-if (-not ($PSBoundParameters.Count)) {
+# Set defaults if no switches provided
+if (-not $PSBoundParameters.Count) {
     $RenameExisting = $true
     $MonitorNew = $true
     $Interval = 3
-    $Recursive = $true
+    $Recursive = $false
 }
 
 # Set interval default if not provided
 if (-not $Interval) { $Interval = 3 }
 
-# Set target SYSVOL path
+# Set default SYSVOL path if not provided
 if (-not $SysvolPath) {
     try {
         $domain = ([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).Name
         $SysvolPath = "\\$domain\SYSVOL"
-        if (-not $PSBoundParameters.ContainsKey("Recursive")) {
-            $Recursive = $true
-        }
     } catch {
         Write-Error "Unable to determine domain FQDN. Are you connected to a domain?"
         exit
     }
 }
 
-# Set up logging
+# Set default for recursive if not explicitly provided
+if (-not $PSBoundParameters.ContainsKey("Recursive")) {
+    $Recursive = $false
+}
+
+# Setup logging
 $logFile = "$PSScriptRoot\sysvol_monitor.log"
 function Log {
     param ($message)
@@ -40,12 +42,12 @@ function Log {
 }
 
 Log "=== Script started ==="
-Log "Monitoring path: $SysvolPath"
-Log "RenameExisting: $RenameExisting | MonitorNew: $MonitorNew | Interval: $Interval | Recursive: $Recursive"
+Log "Target path: $SysvolPath"
+Log "RenameExisting: $RenameExisting | MonitorNew: $MonitorNew | Interval: $Interval sec | Recursive: $Recursive"
 
 $knownFiles = @{}
 
-# Choose file discovery mode
+# File discovery function
 function Get-Files {
     param ($path)
     if ($Recursive) {
@@ -55,7 +57,7 @@ function Get-Files {
     }
 }
 
-# Rename a file with 'aa' if not already done
+# Safe renaming
 function Rename-FileSafely {
     param ($file)
     $fullPath = $file.FullName
@@ -63,9 +65,9 @@ function Rename-FileSafely {
     if ($file.Name -ne $newName) {
         try {
             Rename-Item -Path $fullPath -NewName $newName -ErrorAction Stop
-            Log "Renamed file: '$($file.Name)' → '$newName'"
+            Log "Renamed: '$($file.Name)' → '$newName'"
         } catch {
-            Log "Error renaming file '$($file.Name)': $_"
+            Log "Rename error on '$($file.Name)': $_"
         }
     }
 }
@@ -78,11 +80,11 @@ if ($RenameExisting) {
             Rename-FileSafely -file $_
         }
     } catch {
-        Log "Error during existing file scan: $_"
+        Log "Error processing existing files: $_"
     }
 }
 
-# Monitor loop for new files
+# Monitor loop
 if ($MonitorNew) {
     while ($true) {
         try {
@@ -96,7 +98,6 @@ if ($MonitorNew) {
         } catch {
             Log "Monitoring error: $_"
         }
-
         Start-Sleep -Seconds $Interval
     }
 } else {
